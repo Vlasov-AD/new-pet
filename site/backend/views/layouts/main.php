@@ -42,28 +42,15 @@ AppAsset::register($this);
                 'visible' => Yii::$app->user->can('admin')
             ],
             [
-                'label' => 'Товары',
-                'url' => ['/product/index'],
-                'visible' => Yii::$app->user->can('admin')
+                'label' => 'Пользователи',
+                'url' => ['/user/index'],
+                'visible' => !Yii::$app->user->isGuest
             ],
             [
                 'label' => 'Выход',
                 'url' => ['/site/logout'],
                 'visible' => !Yii::$app->user->isGuest
             ],
-            [
-                'label' => 'Языки',
-                'items' => [
-                    [
-                        'label' => 'Русский',
-                        'url' => Yii::$app->request->url
-                    ],
-                    [
-                        'label' => 'Английский',
-                        'url' => '/en' . Yii::$app->request->url
-                    ]
-                ]
-            ]
         ],
     ]);
     NavBar::end();

@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace backend\controllers;
 
-use backend\models\form\UserUpdate;
 use Yii;
 use common\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * Управление пользователями

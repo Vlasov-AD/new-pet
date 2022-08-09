@@ -59,7 +59,7 @@ use common\models\Attribute;
                             [
                                 'class' => 'btn btn-xs btn-danger',
                                 'data' => [
-                                    'confirm' => 'Удалить связь ' . $data->attr->name . 'с ' .$data->product->name .' ?',
+                                    'confirm' => 'Удалить связь ' . $data->attr->name . ' с ' .$data->product->name .' ?',
                                     'method' => 'post',
                                     'params' => [
                                         'delete-attr' => $data->id

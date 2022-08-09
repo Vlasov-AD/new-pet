@@ -47,6 +47,11 @@ AppAsset::register($this);
                 'visible' => Yii::$app->user->can('admin')
             ],
             [
+                'label' => 'Характеристики',
+                'url' => ['/attribute/index'],
+                'visible' => Yii::$app->user->can('admin')
+            ],
+            [
                 'label' => 'Пользователи',
                 'url' => ['/user/index'],
                 'visible' => !Yii::$app->user->isGuest

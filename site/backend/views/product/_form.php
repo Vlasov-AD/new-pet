@@ -85,7 +85,7 @@ use aquy\gallery\GalleryManager;
     </div>
 
     <div class="col-md-6">
-        <?php /* if (!$model->isNewRecord): ?>
+        <?php if (!$model->isNewRecord): ?>
             <div class="panel panel-info">
                 <div class="panel-body">
                     <?= $this->render('_form-attribute', [
@@ -95,7 +95,7 @@ use aquy\gallery\GalleryManager;
                     ]) ?>
                 </div>
             </div>
-        <?php endif; */ ?>
+        <?php endif; ?>
     </div>
 </div>
 <?php

@@ -89,11 +89,11 @@ class Product extends ActiveRecord
     {
         return [
             [['name', 'slug', 'first_image'], 'string', 'max' => 255],
-            [['name', 'price_current'], 'required'],
+            [['name'], 'required'],
             ['name', 'unique'],
             ['main_category', 'default', 'value' => 1],
             ['status', 'default', 'value' => 0],
-            [['main_category', 'categories_list'], 'required', 'when' => function ($model) {
+            [['main_category', 'categories_list', 'price_current'], 'required', 'when' => function ($model) {
                 return !$model->isNewRecord;
             }, 'message' => 'Необходимо выбрать категорию'],
             ['description', 'string'],
@@ -156,7 +156,7 @@ class Product extends ActiveRecord
     {
         //удаляем связи из таблиц
         (new CategoryProduct())->removeFromChildRelation($this->id);
-        //(new ProductAttr())->removeFromParentRelation($this->id);
+        (new ProductAttr())->removeFromParentRelation($this->id);
 
         parent::afterDelete();
     }
@@ -193,16 +193,16 @@ class Product extends ActiveRecord
             ->viaTable('{{%category_product}}', ['product_id' => 'id']);
     }
 
-    /*public function getAttr()
+    public function getAttr()
     {
         return $this->hasMany(Attribute::class, ['id' => 'attribute_id'])
             ->viaTable('{{%product_attribute}}', ['product_id' => 'id']);
-    }*/
+    }
 
-    /*public function getAttrRelations()
+    public function getAttrRelations()
     {
         return $this->hasMany(ProductAttr::class, ['product_id' => 'id']);
-    }*/
+    }
 
     public function getMainCategory()
     {

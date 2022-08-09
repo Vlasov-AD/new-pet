@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace backend\controllers;
 
 use common\models\Product;
-//use common\models\ProductAttr;
+use common\models\ProductAttr;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -14,7 +14,6 @@ use yii\web\NotFoundHttpException;
 use aquy\gallery\GalleryManagerAction;
 use backend\models\search\ProductSearch;
 use himiklab\sortablegrid\SortableGridAction;
-use yii\web\Response;
 
 /**
  * ProductController implements the CRUD actions for Product model.
@@ -84,10 +83,10 @@ class ProductController extends Controller
                     'product_fields' => Product::class
                 ]
             ],
-            /*'attr' => [
+            'attr' => [
                 'class' => SortableGridAction::class,
                 'modelName' => ProductAttr::class,
-            ],*/
+            ],
         ];
     }
 
@@ -142,6 +141,8 @@ class ProductController extends Controller
             return $this->redirect(['update', 'id' => $model->id]);
         }
 
+        $error = $model->errors;
+
         return $this->render('create', [
             'model' => $model,
         ]);
@@ -164,14 +165,14 @@ class ProductController extends Controller
             throw new NotFoundHttpException('Товар не найден!');
         }
 
-        /*$productAttrForm = new ProductAttr(['product_id' => $model->id]);
+        $productAttrForm = new ProductAttr(['product_id' => $model->id]);
 
         $productAttrs = new ActiveDataProvider([
             'query' => ProductAttr::find()
                 ->where(['product_id' => $id])
                 ->orderBy('sort')
         ]);
-        $productAttrs->pagination = false;*/
+        $productAttrs->pagination = false;
 
 
         if (Yii::$app->request->isPost && Yii::$app->request->post('Product') && $model->load(Yii::$app->request->post()) && $model->save()) {
@@ -185,28 +186,28 @@ class ProductController extends Controller
 
 
         //редактирование характеристик
-        /*if (Yii::$app->request->isPost && Yii::$app->request->post('ProductAttr') && $productAttrForm->load(Yii::$app->request->post()) && $productAttrForm->validate()) {
+        if (Yii::$app->request->isPost && Yii::$app->request->post('ProductAttr') && $productAttrForm->load(Yii::$app->request->post()) && $productAttrForm->validate()) {
             $productAttrForm->addOrUpdateRelation();
             return $this->redirect([
                 'update',
                 'id' => $model->id,
             ]);
-        }*/
+        }
 
 
         //удаление характеристик
-        /*if (Yii::$app->request->isPost && Yii::$app->request->post('delete-attr')) {
+        if (Yii::$app->request->isPost && Yii::$app->request->post('delete-attr')) {
             (new ProductAttr())->deleteByPrimary((int) Yii::$app->request->post('delete-attr'));
             return $this->redirect([
                 'update',
                 'id' => $model->id,
             ]);
-        }*/
+        }
 
         return $this->render('update', [
             'model' => $model,
-            /*'productAttrForm' => $productAttrForm,
-            'productAttrs' => $productAttrs,*/
+            'productAttrForm' => $productAttrForm,
+            'productAttrs' => $productAttrs
         ]);
     }
 

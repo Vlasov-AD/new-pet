@@ -18,8 +18,8 @@ $this->params['breadcrumbs'][] = 'Редактировать';
 
     <?= $this->render('_form', [
         'model' => $model,
-        /*'productAttrForm' => $productAttrForm,
-        'productAttrs' => $productAttrs,*/
+        'productAttrForm' => $productAttrForm,
+        'productAttrs' => $productAttrs,
     ]) ?>
 
 </div>

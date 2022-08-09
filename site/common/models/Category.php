@@ -5,6 +5,7 @@ namespace common\models;
 
 use aquy\gallery\GalleryBehavior;
 use creocoder\nestedsets\NestedSetsBehavior;
+use JetBrains\PhpStorm\ArrayShape;
 use Yii;
 use yii\behaviors\SluggableBehavior;
 use yii\db\ActiveRecord;
@@ -28,14 +29,12 @@ use yii\helpers\Url;
  */
 class Category extends ActiveRecord
 {
-    public $meta;
-
     const STATUS_DRAFT = 0;
     const STATUS_ACTIVE = 1;
 
     public int $parent_id = 1;
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             [
@@ -70,7 +69,7 @@ class Category extends ActiveRecord
     /**
      * @return string имя таблицы
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%category}}';
     }
@@ -79,7 +78,7 @@ class Category extends ActiveRecord
      * Правила валидации
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['name', 'title', 'slug', 'first_image'], 'string', 'max' => 255],
@@ -93,7 +92,7 @@ class Category extends ActiveRecord
      * Расшифровка атрибутов
      * @return array
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'id категории',

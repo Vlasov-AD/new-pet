@@ -37,6 +37,11 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             [
+                'label' => 'Товары',
+                'url' => ['/product/index'],
+                'visible' => Yii::$app->user->can('admin')
+            ],
+            [
                 'label' => 'Категории',
                 'url' => ['/category/index'],
                 'visible' => Yii::$app->user->can('admin')

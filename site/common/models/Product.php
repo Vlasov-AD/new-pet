@@ -11,6 +11,7 @@ use yii\behaviors\SluggableBehavior;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 /**
  * Модель для таблицы "product"
@@ -45,7 +46,6 @@ class Product extends ActiveRecord
     public function behaviors()
     {
         return [
-            //для фотографий, которые расстягиваем
             'galleryProduct' => [
                 'class' => GalleryBehavior::class,
                 'type' => 'product',
@@ -104,7 +104,6 @@ class Product extends ActiveRecord
                 }
             }],
             [['created_at', 'updated_at', 'available', 'price_current', 'price_old', 'sort', 'main_category', 'status'], 'integer'],
-            ['products_list', 'safe']
         ];
     }
 
@@ -127,7 +126,6 @@ class Product extends ActiveRecord
             'created_at' => 'время создания',
             'updated_at' => 'время обновления',
             'categories_list' => 'список категорий',
-            'products_list' => 'список категорий',
             'first_image' => 'название первой фотки из галлереи',
             'status' => 'статус товара',
         ];
@@ -145,7 +143,7 @@ class Product extends ActiveRecord
     public function afterFind()
     {
         //заполняем массив категорий из связей
-        $categories = $this->category;
+        $categories = $this->categories;
         foreach ($categories as $category) {
             $this->categories_list[] = $category->id;
         }
@@ -187,7 +185,7 @@ class Product extends ActiveRecord
         return $this->statusList()[$this->status];
     }
 
-    public function getCategory()
+    public function getCategories()
     {
         return $this->hasMany(Category::class, ['id' => 'category_id'])
             ->viaTable('{{%category_product}}', ['product_id' => 'id']);
@@ -252,7 +250,7 @@ class Product extends ActiveRecord
     public function getImagePath(string $image): string
     {
         if ($image) {
-            $path = $this->getBehavior('galleryProductStretch')->getFilePath($image);
+            $path = $this->getBehavior('galleryProduct')->getFilePath($image);
             if (file_exists($path)) {
                 return $path;
             }

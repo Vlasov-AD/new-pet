@@ -45,6 +45,7 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
                     $this->addError($attribute,'Выбранного товара не существует');
                 }
             }],
+            [['category_id', 'product_id'], 'unique', 'targetAttribute' => ['category_id', 'product_id']],
             [['category_id', 'product_id'], 'integer']
         ];
     }
@@ -71,35 +72,27 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
 
-    private function addFew(Product $product, array $currentArray): void
+    private function addFewCategory(Product $product, array $currentArray): void
     {
         foreach ($product->categories_list as $category_id) {
             if (!in_array($category_id, $currentArray)) {
-                (new self([
+                (new static([
                     'category_id' => $category_id,
                     'product_id' => $product->id
                 ]))->save();
 
                 //добавляем родительскую категорию,
                 // если её нет в списке текущем и на добавление
-                $category = Category::find()->where(['id' => $category_id])->one();
-                $parents = $category->parents(1)->one();
-                if (
-                    $parents
-                    && !in_array($parents->id, $currentArray)
-                    && !in_array($parents->id, $product->categories_list)
-                ) {
-                    (new self([
-                        'category_id' => $parents->id,
-                        'product_id' => $product->id
-                    ]))->save();
-                }
-
+                $this->addParentCategory(
+                    (int) $category_id,
+                    $currentArray,
+                    $product
+                );
             }
         }
     }
 
-    private function removeFew(Product $product, array $currentArray): void
+    private function removeFewCategory(Product $product, array $currentArray): void
     {
         foreach ($currentArray as $category_id_current) {
             if (!in_array($category_id_current, $product->categories_list)) {
@@ -110,20 +103,23 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
 
     public function updateCategoryList(Product $product): void
     {
+        //добавляем главную категорию в список
         if (!in_array($product->main_category, $product->categories_list)) {
             $product->categories_list[] = $product->main_category;
         }
+
+        //получаем все связанные с товаром категории
         $currentArray = $this->findRelations($product->id);
 
         //добавляем новые, которые добавили
-        $this->addFew($product, $currentArray);
+        $this->addFewCategory($product, $currentArray);
 
         //удаляем старые, которые отключили
-        $this->removeFew($product ,$currentArray);
+        $this->removeFewCategory($product ,$currentArray);
 
         //если удалены все категории, записываем главную
-        if (!self::find()->where(['product_id' => $product->id])->one()) {
-            (new self([
+        if (!static::find()->where(['product_id' => $product->id])->one()) {
+            (new static([
                 'category_id' => $product->main_category,
                 'product_id' => $product->id
             ]))->save();
@@ -141,7 +137,7 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
 
     public function findRelations(int $id): array|null
     {
-        $currentCategories = self::find()
+        $currentCategories = static::find()
             ->where(['product_id' => $id])
             ->asArray()
             ->all();
@@ -166,7 +162,7 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
 
     public function deleteByFields(int $parent_id, int $child_id): void
     {
-        self::deleteAll([
+        static::deleteAll([
             'category_id' => $parent_id,
             'product_id' => $child_id
         ]);
@@ -174,7 +170,7 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
 
     public function removeFromParentRelation(int $id): void
     {
-        $category_products = self::find()
+        $category_products = static::find()
             ->where(['category_id' => $id])
             ->all();
         foreach ($category_products as $category_product) {
@@ -184,11 +180,31 @@ class CategoryProduct extends ActiveRecord implements RelationInterface
 
     public function removeFromChildRelation(int $id): void
     {
-        $category_products = self::find()
+        $category_products = static::find()
             ->where(['product_id' => $id])
             ->all();
         foreach ($category_products as $category_product) {
             $category_product->delete();
+        }
+    }
+
+    private function addParentCategory(int $category_id, array $currentArray, Product $product): void
+    {
+        $category = Category::find()->where(['id' => $category_id])->one();
+        if (!$category) {
+            return;
+        }
+
+        $parents = $category->parents(1)->one();
+        if (
+            $parents
+            && !in_array($parents->id, $currentArray)
+            && !in_array($parents->id, $product->categories_list)
+        ) {
+            (new static([
+                'category_id' => $parents->id,
+                'product_id' => $product->id
+            ]))->save();
         }
     }
 

@@ -37,14 +37,6 @@ class ProductSearch extends Product
         return '';
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
 
     /**
      * Creates data provider instance with search query applied
@@ -56,7 +48,7 @@ class ProductSearch extends Product
     public function search($params)
     {
         $query = Product::find()
-            ->with(['category'])
+            ->with(['categories'])
             ->orderBy(['sort' => SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
@@ -78,14 +70,12 @@ class ProductSearch extends Product
             'updated_at' => $this->updated_at,
         ]);
 
-        if ($this->category_id) {
+        if ($this->category_id && $this->category_id !== 1) {
             $categories = (new Query())->select(['product_id'])->where(['category_id' => $this->category_id])->from('category_product')->column();
-            $query->andFilterWhere(['id' => $categories]);
+            $query->andWhere(['id' => $categories]);
         }
 
         $query->andFilterWhere(['like', 'name', $this->name, false])
-            ->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'description', $this->description])
             ->andFilterWhere(['=', 'available', $this->available])
             ->andFilterWhere(['=', 'status', $this->status]);
 

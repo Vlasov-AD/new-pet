@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'category.name:text:главная категория (на сайт)',
             [
                 'attribute' => 'categories_list',
-                'value' => implode(', ', ArrayHelper::map($model->category, 'id', 'name'))
+                'value' => implode(', ', ArrayHelper::map($model->categories, 'id', 'name'))
             ],
             'name',
             [

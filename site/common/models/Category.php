@@ -135,12 +135,12 @@ class Category extends ActiveRecord
         return Url::to('/catalog/'.$this->slug, $schema);
     }
 
-    /*public function getProducts()
+    public function getProducts()
     {
         return $this->hasMany(Product::class, ['id' => 'product_id'])
             ->viaTable('{{%category_product}}', ['category_id' => 'id'])
             ->orderBy(['sort' => SORT_ASC]);
-    }*/
+    }
 
     public function getImages()
     {

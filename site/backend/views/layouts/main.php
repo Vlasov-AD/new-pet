@@ -57,6 +57,11 @@ AppAsset::register($this);
                 'visible' => !Yii::$app->user->isGuest
             ],
             [
+                'label' => 'Очистить кэш',
+                'url' => ['/site/cache'],
+                'visible' => Yii::$app->user->can('admin')
+            ],
+            [
                 'label' => 'Выход',
                 'url' => ['/site/logout'],
                 'visible' => !Yii::$app->user->isGuest

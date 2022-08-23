@@ -48,13 +48,15 @@ class ProductSearch extends Product
     public function search($params)
     {
         $query = Product::find()
-            ->with(['categories'])
+            ->with(['categories', 'mainCategory'])
             ->orderBy(['sort' => SORT_ASC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => false,
-            'pagination' => false,
+            'pagination' => [
+                'pageSize' => 100
+            ],
         ]);
 
         $this->load($params);

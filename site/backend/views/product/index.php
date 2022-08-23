@@ -31,12 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'main_category',
                 'value' => function ($model) {
-                    foreach ($model->categories as $category) {
-                        if ($model->main_category === $category->id) {
-                            return $category->name;
-                        }
-                    }
-                    return 'Неопределена';
+                    return $model->mainCategory->name;
                 }
             ],
             'price_current',

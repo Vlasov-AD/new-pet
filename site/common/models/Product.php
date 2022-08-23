@@ -100,7 +100,7 @@ class Product extends ActiveRecord
             ['main_category', function ($attribute) {
                 $categoriesArray = ArrayHelper::map(Category::find()->all(), 'id', 'id');;
                 if (!in_array($this->$attribute, $categoriesArray)) {
-                    $this->addError($attribute, 'Выбранной категории не существует');
+                    $this->addError($attribute, "Выбранной категории не существует");
                 }
             }],
             [['created_at', 'updated_at', 'available', 'price_current', 'price_old', 'sort', 'main_category', 'status'], 'integer'],

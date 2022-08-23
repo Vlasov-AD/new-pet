@@ -88,4 +88,13 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    public function actionCache()
+    {
+        Yii::$app->cache->flush();
+        Yii::$app->cacheFrontend->flush();
+        Yii::$app->session->setFlash('success', 'Кэш успешно очищен!');
+
+        return $this->redirect(['site/index']);
+    }
+
 }

@@ -58,6 +58,10 @@ return [
             'dateFormat' => 'dd.MM.yyyy',
             'datetimeFormat' => 'd MMMM yyyy HH:mm:ss'
         ],
+        'cacheFrontend' => [
+            'class' => 'yii\caching\FileCache',
+            'cachePath' => '@frontend/runtime/cache'
+        ],
     ],
     'params' => $params,
 ];

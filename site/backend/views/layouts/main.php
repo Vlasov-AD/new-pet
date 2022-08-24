@@ -62,6 +62,17 @@ AppAsset::register($this);
                 'visible' => Yii::$app->user->can('admin')
             ],
             [
+                'label' => 'Страницы',
+                'visible' => Yii::$app->user->can('admin'),
+                'items' => [
+                    [
+                        'label' => 'Блок кэш',
+                        'url' => ['/page/block-cache'],
+                        'visible' => Yii::$app->user->can('admin')
+                    ]
+                ]
+            ],
+            [
                 'label' => 'Выход',
                 'url' => ['/site/logout'],
                 'visible' => !Yii::$app->user->isGuest

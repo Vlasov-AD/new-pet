@@ -6,6 +6,8 @@ namespace backend\controllers;
 use backend\models\search\ProductSearch;
 use common\models\Product;
 use Yii;
+use yii\caching\DbDependency;
+use yii\db\Connection;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\widgets\Menu;
@@ -49,14 +51,20 @@ class PageController extends Controller
 
     public function actionBlockCache()
     {
-        $products = Product::find()
-            ->limit(200)
-            ->with(['categories', 'mainCategory'])
-            ->orderBy(['created_at' => SORT_ASC])
-            ->all();
+        $dependency = new DbDependency();
+        $dependency->sql = 'SELECT MAX(updated_at) FROM product';
+
+        $products = Product::getDb()->cache(function ($db) {
+            return  Product::find()
+                ->limit(200)
+                ->with(['categories', 'mainCategory'])
+                ->orderBy(['created_at' => SORT_ASC])
+                ->all();
+        }, 24 * 60 * 60, $dependency);
 
         return $this->render('block-cache', [
-            'products' => $products
+            'products' => $products,
+            'dependency' => $dependency
         ]);
     }
 }

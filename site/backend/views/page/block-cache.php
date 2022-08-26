@@ -8,9 +8,11 @@ use yii\web\View;
 /* @var $this View */
 /* @var $searchModel ProductSearch */
 /* @var $products Product[] */
+/** @var array $dependency*/
 
 $this->title = 'Товары';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <style>
@@ -24,28 +26,30 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="product-index">
 
     <h1><?= Html::encode($this->title) . ' - страница для работы с кэшем(блок)' ?></h1>
-
-    <table style="width: 1200px;">
-        <tr>
-            <th>id</th>
-            <th>Имя</th>
-            <th>Название категории</th>
-            <th>Цена текущая</th>
-            <th>Цена старая</th>
-            <th>Доступность</th>
-            <th>Статус</th>
-        </tr>
-        <?php foreach ($products as $product): ?>
+    <?php if ($this->beginCache('block-page-cache', ['duration' => 24 * 60 * 60, 'dependency' => $dependency])): ?>
+        <table style="width: 1200px;">
             <tr>
-                <td><?= $product->id ?></td>
-                <td><?= $product->name ?></td>
-                <td><?= $product->mainCategory->name ?></td>
-                <td><?= $product->price_current ?></td>
-                <td><?= $product->price_old ?></td>
-                <td><?= $product->available ? 'Да' : 'Нет' ?></td>
-                <td><?= $product->status ? 'Активен' : 'Черновик' ?></td>
+                <th>id</th>
+                <th>Имя</th>
+                <th>Название категории</th>
+                <th>Цена текущая</th>
+                <th>Цена старая</th>
+                <th>Доступность</th>
+                <th>Статус</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+            <?php foreach ($products as $product): ?>
+                <tr>
+                    <td><?= $product->id ?></td>
+                    <td><?= $product->name ?></td>
+                    <td><?= $product->mainCategory->name ?></td>
+                    <td><?= $product->price_current ?></td>
+                    <td><?= $product->price_old ?></td>
+                    <td><?= $product->available ? 'Да' : 'Нет' ?></td>
+                    <td><?= $product->status ? 'Активен' : 'Черновик' ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <?php $this->endCache(); ?>
+    <?php endif; ?>
 </div>
 

@@ -39,7 +39,7 @@ return [
             ],
         ],
         'test' => [
-            'test' => 'test'
+            'test' => 'test3'
         ]
     ],
 ];

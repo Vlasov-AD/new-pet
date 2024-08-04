@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  kernel:
+    build:
+      context: .
+      dockerfile: ./build/php/Dockerfile
+    volumes:
+      - ./app/:/var/www/
+      - ./build/php/apache2.conf:/etc/apache2/apache2.conf
+      - ./build/php/apache_virtual.conf:/etc/apache2/sites-available/000-default.conf
+      - ./build/php/php.ini:/usr/local/etc/php/php.ini
+      - ./build/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./build/php/logs/access.log:/var/log/apache2/access.log
+      - ./build/php/logs/error.log:/var/log/apache2/error.log
+    ports:
+      - "80:80"
+    networks:
+      customnetwork:
+        ipv4_address: 172.60.0.10
+volumes:
+  vendor:
+networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.60.0.0/16

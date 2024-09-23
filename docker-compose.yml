@@ -12,14 +12,30 @@ services:
       - ./build/php/logs/access.log:/var/log/apache2/access.log
       - ./build/php/logs/error.log:/var/log/apache2/error.log
     ports:
-      - "81:80"
+      - "89:80"
+    depends_on:
+      - db
     networks:
-      customnetwork:
-        ipv4_address: 172.60.0.10
-volumes:
-  vendor:
+      commonnetwork:
+        ipv4_address: 172.200.0.10
+  db:
+    env_file:
+      - app/.env
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: pet_db
+    volumes:
+      - ./build/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      commonnetwork:
+        ipv4_address: 172.200.0.20
 networks:
-  customnetwork:
+  commonnetwork:
     ipam:
       config:
-        - subnet: 172.60.0.0/16
+        - subnet: 172.200.0.0/16

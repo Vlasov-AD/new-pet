@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+    RewriteEngine On
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    # если /admin, то в backend
+    RewriteRule ^.*$ public/index.php
+</IfModule>

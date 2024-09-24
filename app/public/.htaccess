@@ -1,4 +1,8 @@
 RewriteEngine on
 
-# Otherwise forward it to index.php
-RewriteRule . index.php
+# If a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Перенаправляем все остальные запросы на index.php
+RewriteRule ^ index.php [QSA,L]

@@ -1,13 +1,11 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
-
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+        types:
+            email_value_object_type: App\DoctrineType\EmailType
+            role_collection_type: App\DoctrineType\RoleCollectionType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true

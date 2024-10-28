@@ -29,6 +29,12 @@ RUN apt-get install -y \
         zip \
   && docker-php-ext-install zip
 
+RUN a2enmod rewrite && a2enmod ssl && a2enmod socache_shmcb
+COPY build/ssl/server.crt /etc/ssl/certs/server.crt
+COPY build/ssl/server.key /etc/ssl/private/server.key
+RUN sed -i '/SSLCertificateFile.*snakeoil\.pem/c\SSLCertificateFile \/etc\/ssl\/certs\/server.crt' /etc/apache2/sites-available/default-ssl.conf && sed -i '/SSLCertificateKeyFile.*snakeoil\.key/cSSLCertificateKeyFile /etc/ssl/private/server.key\' /etc/apache2/sites-available/default-ssl.conf
+RUN a2ensite default-ssl
+
 RUN a2enmod headers
 RUN a2enmod rewrite
 RUN service apache2 restart

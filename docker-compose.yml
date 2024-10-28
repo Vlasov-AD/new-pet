@@ -13,6 +13,7 @@ services:
       - ./build/php/logs/error.log:/var/log/apache2/error.log
     ports:
       - "89:80"
+      - "8444:443"
     depends_on:
       - db
     networks:
